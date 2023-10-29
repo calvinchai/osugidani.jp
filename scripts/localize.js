@@ -4,6 +4,7 @@ const SETTINGS = {
     allowPureNumbers: false,
     maxPathTags: 5
 };
+const WORKER_URL = 'http://172.27.111.146:8787/cf-api/'
 
 function isPureAscii(str) {
     return /^[\x00-\x7F]+$/.test(str);
@@ -94,7 +95,7 @@ function addTitleToI18nData() {
 addTitleToI18nData();
 addTranslationKeysToElement(document.body);
 async function fetchTranslations(data) {
-    const response = await fetch('YOUR_WORKER_URL', {
+    const response = await fetch(WORKER_URL, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
