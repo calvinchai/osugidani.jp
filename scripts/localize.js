@@ -96,13 +96,13 @@ addTitleToI18nData();
 addTranslationKeysToElement(document.body);
 async function fetchTranslations(data) {
     const response = await fetch(WORKER_URL, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Pathname': btoa(window.location.pathname), // Send current pathname as header
-            'i18nData': btoa(JSON.stringify(data)) // Send i18nData as header
+            'X-Pathname': window.location.pathname // Send current pathname as header
+            
         },
-        
+        body: JSON.stringify(data)
     });
 
     if (response.ok) {

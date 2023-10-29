@@ -1,4 +1,7 @@
 interface Env {
+  [x: string]: any;
+  ORIGIN_URL: string;
+  GH_PAGE_URL: string;
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//
