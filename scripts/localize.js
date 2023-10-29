@@ -4,7 +4,7 @@ const SETTINGS = {
     allowPureNumbers: false,
     maxPathTags: 5
 };
-const WORKER_URL = 'http://172.27.111.146:8787/cf-api/'
+const WORKER_URL = 'http://127.0.0.1:8787/cf-api/'
 
 function isPureAscii(str) {
     return /^[\x00-\x7F]+$/.test(str);
