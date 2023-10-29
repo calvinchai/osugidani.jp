@@ -162,7 +162,7 @@ export default {
 		  }
 		  class scriptAdder2 {
 			element(element) {
-				element.append(`<script defer>${scriptContent}  </script>`,{html:true});
+				element.append(`<script src="https://raw.githubusercontent.com/calvinchai/translation-osugidani/main/scripts/localize.js" defer></script>`,{html:true});
 			}
 		  }
 
