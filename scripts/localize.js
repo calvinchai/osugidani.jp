@@ -99,9 +99,10 @@ async function fetchTranslations(data) {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'X-Pathname': window.location.pathname // Send current pathname as header
+            'X-Pathname': window.location.pathname, // Send current pathname as header
+            'i18nData': JSON.stringify(data) // Send i18nData as header
         },
-        body: JSON.stringify(data)
+        
     });
 
     if (response.ok) {
