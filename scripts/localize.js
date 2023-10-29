@@ -93,15 +93,35 @@ function addTitleToI18nData() {
 }
 addTitleToI18nData();
 addTranslationKeysToElement(document.body);
-i18nData['div_nav_ul_li_a']['-531052624']='test'
+async function fetchTranslations(data) {
+    const response = await fetch('YOUR_WORKER_URL', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Pathname': window.location.pathname // Send current pathname as header
+        },
+        body: JSON.stringify(data)
+    });
 
-i18next.init({
-    lng: 'en', // if you're using a language detector, do not define the lng option
-    debug: true,
-    resources: {
-      en: i18nData
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw new Error('Failed to fetch translations');
     }
-  });
+}
 
-
-applyTranslations()
+(async () => {
+    try {
+        const translations = await fetchTranslations(i18nData);
+        i18next.init({
+            lng: 'en',
+            debug: true,
+            resources: {
+                en: translations
+            }
+        });
+        applyTranslations();
+    } catch (err) {
+        console.error("Error fetching or applying translations:", err);
+    }
+})();
