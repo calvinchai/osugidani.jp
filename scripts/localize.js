@@ -1,11 +1,3 @@
-// const noi18nConfig = {
-//     workerUrl: noi18nConfigDiv.getAttribute("data-worker-url") || 'http://127.0.0.1:8787/cf-api/',
-//     maxPathTags: parseInt(noi18nConfigDiv.getAttribute("data-max-path-tags")) || 5,
-//     allowPureAscii: noi18nConfigDiv.getAttribute("data-allow-pure-ascii") || false,
-//     allowPureNumbers: noi18nConfigDiv.getAttribute("data-allow-pure-numbers") || false,
-//     statusCode: parseInt(noi18nConfigDiv.getAttribute("data-status-code")) || 200
-// }
-
 const i18nData = {};
 
 const validators = {
@@ -125,3 +117,5 @@ async function postTranslation(data) {
         console.error("Error fetching or applying translations:", err);
     }
 })();
+
+
