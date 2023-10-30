@@ -54,17 +54,6 @@ class ScriptAdder {
     element.append(`<script src="${this.scriptUrl}" async ></script>`, { html: true });
   }
 }
-
-// class StatusMetaWriter {
-//   status: number;
-//   constructor(status: number) {
-//     this.status = status;
-//   }
-//   element(element: Element) {
-//     element.append(`<meta name="status" content="${this.status}">`, { html: true });
-//   }
-// }
-
 class HeadDivAdder {
   attributes: Object;
   
