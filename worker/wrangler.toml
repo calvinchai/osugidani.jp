@@ -6,8 +6,7 @@ compatibility_flags = [ "nodejs_compat" ]
 # Note: Use secrets to store sensitive data.
 # Docs: https://developers.cloudflare.com/workers/platform/environment-variables
 [vars]
-ORIGIN_URL = 'https://osugidani.jp/'
-# REPO_URL = 'https://calvinchai.github.io/'
+ORIGIN_BASE_URL = 'https://osugidani.jp/'
 WEBLATE_URL = 'https://weblate.ndxk.cc/'
 GH_PAGE_URL = 'https://calvinchai.github.io/translation-osugidani/'
 REPO_OWNER = 'calvinchai'

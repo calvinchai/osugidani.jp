@@ -1,10 +1,11 @@
-// Configurable settings
-const SETTINGS = {
-    allowPureAscii: false,
-    allowPureNumbers: false,
-    maxPathTags: 5
-};
-//const WORKER_URL = 'http://127.0.0.1:8787/cf-api/'
+// const noi18nConfig = {
+//     workerUrl: noi18nConfigDiv.getAttribute("data-worker-url") || 'http://127.0.0.1:8787/cf-api/',
+//     maxPathTags: parseInt(noi18nConfigDiv.getAttribute("data-max-path-tags")) || 5,
+//     allowPureAscii: noi18nConfigDiv.getAttribute("data-allow-pure-ascii") || false,
+//     allowPureNumbers: noi18nConfigDiv.getAttribute("data-allow-pure-numbers") || false,
+//     statusCode: parseInt(noi18nConfigDiv.getAttribute("data-status-code")) || 200
+// }
+
 
 function isPureAscii(str) {
     return /^[\x00-\x7F]+$/.test(str);
@@ -25,7 +26,7 @@ function addTranslationKeysToElement(element, currentPath = []) {
     if (element.nodeType === Node.ELEMENT_NODE) {
         const newPath = (element.nodeName.toLowerCase() === 'html' || element.nodeName.toLowerCase() === 'body')
             ? currentPath
-            : currentPath.concat([element.nodeName.toLowerCase()]).slice(-SETTINGS.maxPathTags);
+            : currentPath.concat([element.nodeName.toLowerCase()]).slice(-noi18nConfig.maxPathTags);
 
         const textContent = Array.from(element.childNodes)
             .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim())
@@ -34,8 +35,8 @@ function addTranslationKeysToElement(element, currentPath = []) {
 
         if (textContent &&
             !isPureSpace(textContent) &&
-            !(SETTINGS.allowPureAscii === false && isPureAscii(textContent)) &&
-            !(SETTINGS.allowPureNumbers === false && isPureNumbers(textContent)) &&
+            !(noi18nConfig.allowPureAscii === false && isPureAscii(textContent)) &&
+            !(noi18nConfig.allowPureNumbers === false && isPureNumbers(textContent)) &&
             !element.getAttribute('data-i18n')
         ) {
             const namespace = newPath.join('_');
@@ -72,8 +73,8 @@ function addTitleToI18nData() {
         const titleText = title.textContent.trim();
         if (titleText &&
             !isPureSpace(titleText) &&
-            !(SETTINGS.allowPureAscii === false && isPureAscii(titleText)) &&
-            !(SETTINGS.allowPureNumbers === false && isPureNumbers(titleText))
+            !(noi18nConfig.allowPureAscii === false && isPureAscii(titleText)) &&
+            !(noi18nConfig.allowPureNumbers === false && isPureNumbers(titleText))
         ) {
             const key = CryptoJS.MD5(titleText).toString();
             i18nData['title'] = {
@@ -86,21 +87,19 @@ function addTitleToI18nData() {
 
 
 async function postTranslation(data) {
-    namespace = window.translationNamespace;
-    if (namespace == "/") {
-        namespace = "index";
-    }
+    pathName = window.translationNamespace;
 
-    fetch(WORKER_URL, {
+    fetch(noi18nConfig.workerUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Pathname': namespace
+            'X-Pathname': pathName
         },
         body: JSON.stringify(data)
     });
 
 }
+
 (async () => {
     try {
         while (!window.translationLoaded) {
@@ -125,8 +124,9 @@ async function postTranslation(data) {
                 }
             }
         });
-        postTranslation(i18nData);
+        
         applyTranslations();
+        postTranslation(i18nData);
     } catch (err) {
         console.error("Error fetching or applying translations:", err);
     }
