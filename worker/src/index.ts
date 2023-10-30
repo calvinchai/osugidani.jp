@@ -1,5 +1,3 @@
-
-
 import HandleAPI from './api';
 
 // Rewriter classes
