@@ -4,7 +4,7 @@ const SETTINGS = {
     allowPureNumbers: false,
     maxPathTags: 5
 };
-const WORKER_URL = 'http://127.0.0.1:8787/cf-api/'
+//const WORKER_URL = 'http://127.0.0.1:8787/cf-api/'
 
 function isPureAscii(str) {
     return /^[\x00-\x7F]+$/.test(str);
@@ -19,16 +19,7 @@ function isPureSpace(str) {
 }
 
 let i18nData = {};
-function hashString(str) {
-    // Simple hash function for text
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-}
+
 
 function addTranslationKeysToElement(element, currentPath = []) {
     if (element.nodeType === Node.ELEMENT_NODE) {
@@ -48,7 +39,7 @@ function addTranslationKeysToElement(element, currentPath = []) {
             !element.getAttribute('data-i18n')
         ) {
             const namespace = newPath.join('_');
-            const key = hashString(textContent); // Use a hash of the text content as the key
+            const key = CryptoJS.MD5(textContent).toString();
 
             if (!i18nData[namespace]) {
                 i18nData[namespace] = {};
@@ -94,34 +85,43 @@ function addTitleToI18nData() {
 }
 addTitleToI18nData();
 addTranslationKeysToElement(document.body);
-async function fetchTranslations(data) {
-    const response = await fetch(WORKER_URL, {
+
+async function postTranslation(data) {
+    namespace = window.location.pathname;
+    if (namespace == "/") {
+        namespace = "index";
+    }
+
+    fetch(WORKER_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Pathname': window.location.pathname // Send current pathname as header
-            
+            'X-Pathname': namespace
         },
         body: JSON.stringify(data)
     });
 
-    if (response.ok) {
-        return await response.json();
-    } else {
-        throw new Error('Failed to fetch translations');
-    }
 }
 
 (async () => {
     try {
-        const translations = await fetchTranslations(i18nData);
+        nsTranslationdata = window.nsTranslationdata || {};
+        allTranslationdata = window.allTranslationdata || {};
+
         i18next.init({
             lng: 'en',
             debug: true,
+            defaultNS: 'default',
+            fallbackNS: 'default',
             resources: {
-                en: translations
+                en: {
+                    default: allTranslationdata,
+                    ...nsTranslationdata
+
+                }
             }
         });
+        postTranslation(i18nData);
         applyTranslations();
     } catch (err) {
         console.error("Error fetching or applying translations:", err);
