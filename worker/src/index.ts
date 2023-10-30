@@ -40,12 +40,12 @@ class ScriptRewriter {
 class ScriptAdder {
   scriptUrl: string;
   defer: boolean;
-  constructor(scriptUrl: string,defer=false) {
+  constructor(scriptUrl: string, defer = false) {
     this.scriptUrl = scriptUrl;
     this.defer = defer;
   }
   element(element: Element) {
-    if (this.defer){
+    if (this.defer) {
       element.append(`<script src="${this.scriptUrl}" defer ></script>`, { html: true });
       return
     }
@@ -54,11 +54,11 @@ class ScriptAdder {
 }
 class HeadDivAdder {
   attributes: Object;
-  
+
   constructor(attributes: Object) {
     this.attributes = attributes;
   }
-  
+
   element(element: Element) {
     const attrString = this.attributesToString(this.attributes);
     element.append(`<div ${attrString}></div>`, { html: true });
@@ -77,12 +77,12 @@ export default {
     const workerBaseUrl = url.origin;
     const originBaseUrl = new URL(env.ORIGIN_BASE_URL).origin;
     const workerApiEndpoint = env.WORKER_API_ENDPOINT || "/cf-api";
-    
+
     if (url.pathname.startsWith(workerApiEndpoint)) {
       return HandleAPI.fetch(request, env);
     }
     // console.log(env.ORIGIN_BASE_URL, url.pathname)
-    const forwardRequestUrl = new URL(url.pathname,originBaseUrl).toString();
+    const forwardRequestUrl = new URL(url.pathname, originBaseUrl).toString();
     const forwardRequest = new Request(forwardRequestUrl, request);
 
     const response = await fetch(forwardRequest);
@@ -92,7 +92,7 @@ export default {
     }
     const frontendConfig = {
       id: "noi18n-config",
-      "data-worker-url": new URL(workerApiEndpoint,workerBaseUrl).toString(),
+      "data-worker-url": new URL(workerApiEndpoint, workerBaseUrl).toString(),
       "data-max-path-tags": env.MAX_PATH_TAGS || 5,
       "data-allow-pure-ascii": env.ALLOW_PURE_ASCII || false,
       "data-allow-pure-numbers": env.ALLOW_PURE_NUMBERS || false,
