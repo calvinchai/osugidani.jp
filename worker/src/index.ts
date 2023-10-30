@@ -31,13 +31,30 @@ class ScriptRewriter {
 
 class ScriptAdder {
   scriptUrl: string;
-  constructor(scriptUrl: string) {
+  defer: boolean;
+  constructor(scriptUrl: string,defer=false) {
     this.scriptUrl = scriptUrl;
+    this.defer = defer;
   }
   element(element: Element) {
+    if (this.defer){
+      element.append(`<script src="${this.scriptUrl}" defer ></script>`, { html: true });
+      return
+    }
     element.append(`<script src="${this.scriptUrl}" async ></script>`, { html: true });
   }
 }
+
+class StatusMetaWriter {
+  status: number;
+  constructor(status: number) {
+    this.status = status;
+  }
+  element(element: Element) {
+    element.append(`<meta name="status" content="${this.status}">`, { html: true });
+  }
+}
+
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -47,7 +64,6 @@ export default {
     if (ORIGIN_URL.endsWith('/')) {
       ORIGIN_URL = ORIGIN_URL.slice(0, -1);
     }
-    const SCRIPT_URL = env.GH_PAGE_URL + 'scripts/localize.js';
     const url = new URL(request.url);
     woker_domain = url.origin;
 
@@ -66,8 +82,12 @@ export default {
       .on("a, link", new AttributeRewriter("href"))
       .on("script", new ScriptRewriter())
       .on("head", new ScriptAdder("https://unpkg.com/i18next/dist/umd/i18next.js"))
-      .on("body", new ScriptAdder(SCRIPT_URL));
-
+      .on("head", new ScriptAdder("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"))
+      .on("head", new ScriptAdder(env.GH_PAGE_URL + 'scripts/fetch_translation.js'))
+      .on("body", new ScriptAdder(env.GH_PAGE_URL + 'scripts/localize.js'));
+    if (response.status>=400){
+      transformer.on("head", new StatusMetaWriter(response.status));
+    }
     return transformer.transform(response);
   },
 };

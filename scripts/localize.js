@@ -32,7 +32,7 @@ function addTranslationKeysToElement(element, currentPath = []) {
             .map(n => n.nodeValue.trim())
             .join(' ').trim();
 
-        if (textContent && 
+        if (textContent &&
             !isPureSpace(textContent) &&
             !(SETTINGS.allowPureAscii === false && isPureAscii(textContent)) &&
             !(SETTINGS.allowPureNumbers === false && isPureNumbers(textContent)) &&
@@ -53,15 +53,15 @@ function addTranslationKeysToElement(element, currentPath = []) {
             addTranslationKeysToElement(child, newPath);
         }
     }
-    
+
 
 }
 function applyTranslations() {
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(el => {
         const key = el.getAttribute('data-i18n');
-        const translation = i18next.t(key);
-        if (translation !== key) { // Only replace if a translation was found
+        const translation = i18next.t(key, { returnNull: true });
+        if (key.indexOf(translation) == -1) { // Only replace if a translation was found
             el.textContent = translation;
         }
     });
@@ -75,7 +75,7 @@ function addTitleToI18nData() {
             !(SETTINGS.allowPureAscii === false && isPureAscii(titleText)) &&
             !(SETTINGS.allowPureNumbers === false && isPureNumbers(titleText))
         ) {
-            const key = hashString(titleText);
+            const key = CryptoJS.MD5(titleText).toString();
             i18nData['title'] = {
                 [key]: titleText
             };
@@ -83,11 +83,10 @@ function addTitleToI18nData() {
         }
     }
 }
-addTitleToI18nData();
-addTranslationKeysToElement(document.body);
+
 
 async function postTranslation(data) {
-    namespace = window.location.pathname;
+    namespace = window.translationNamespace;
     if (namespace == "/") {
         namespace = "index";
     }
@@ -102,21 +101,26 @@ async function postTranslation(data) {
     });
 
 }
-
 (async () => {
     try {
-        nsTranslationdata = window.nsTranslationdata || {};
-        allTranslationdata = window.allTranslationdata || {};
-
+        while (!window.translationLoaded) {
+            await new Promise(r => setTimeout(r, 100));
+        }
+        const nsTranslationData = window.nsTranslationData || {};
+        const allTranslationData = window.allTranslationData || {};
+        addTitleToI18nData();
+        addTranslationKeysToElement(document.body);
         i18next.init({
             lng: 'en',
             debug: true,
-            defaultNS: 'default',
-            fallbackNS: 'default',
+            // defaultNS: 'ns',
+            fallbackNS: 'translation',
+            returnNull: false, // Set this to false
+            returnEmptyString: false, // Set this to false
             resources: {
                 en: {
-                    default: allTranslationdata,
-                    ...nsTranslationdata
+                    translation: allTranslationData,
+                    ...nsTranslationData
 
                 }
             }
