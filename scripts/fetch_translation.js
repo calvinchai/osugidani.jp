@@ -2,11 +2,13 @@ const noi18nConfigDiv = document.getElementById("noi18n-config");
 const noi18nConfig = {
     workerUrl: noi18nConfigDiv.getAttribute("data-worker-url") || 'http://127.0.0.1:8787/cf-api/',
     maxPathTags: parseInt(noi18nConfigDiv.getAttribute("data-max-path-tags")) || 5,
-    allowPureAscii: noi18nConfigDiv.getAttribute("data-allow-pure-ascii") || false,
-    allowPureNumbers: noi18nConfigDiv.getAttribute("data-allow-pure-numbers") || false,
+    allowPureAscii: parseBool(noi18nConfigDiv.getAttribute("data-allow-pure-ascii")) || false,
+    allowPureNumbers: parseBool(noi18nConfigDiv.getAttribute("data-allow-pure-numbers")) || false,
     statusCode: parseInt(noi18nConfigDiv.getAttribute("data-status-code")) || 200
 }
-
+function parseBool(attrValue) {
+    return attrValue === "true";
+}
 async function fetchTranslation(pathName) {
     try {
         const response = await fetch(noi18nConfig.workerUrl, {
