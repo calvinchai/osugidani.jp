@@ -40,7 +40,7 @@ function removeLeadingEndingSlash(str) {
     let pathName = removeLeadingEndingSlash(window.location.pathname) || "index";
 
     if (noi18nConfig.statusCode >= 400)
-        pathName = String(statusCode);
+        pathName = String(noi18nConfig.statusCode);
 
     window.translationNamespace = pathName;
     window.nsTranslationData = await fetchTranslation(pathName);
