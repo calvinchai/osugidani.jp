@@ -6,20 +6,20 @@
 //     statusCode: parseInt(noi18nConfigDiv.getAttribute("data-status-code")) || 200
 // }
 
+const i18nData = {};
 
-function isPureAscii(str) {
-    return /^[\x00-\x7F]+$/.test(str);
+const validators = {
+    isPureAscii: str => /^[\x00-\x7F]+$/.test(str),
+    isPureNumbers: str => /^\d+$/.test(str),
+    isPureSpace: str => /^\s+$/.test(str)
+};
+
+function isValidText(textContent) {
+    return textContent &&
+        !validators.isPureSpace(textContent) &&
+        !(noi18nConfig.allowPureAscii === false && validators.isPureAscii(textContent)) &&
+        !(noi18nConfig.allowPureNumbers === false && validators.isPureNumbers(textContent));
 }
-
-function isPureNumbers(str) {
-    return /^\d+$/.test(str);
-}
-
-function isPureSpace(str) {
-    return /^\s+$/.test(str);
-}
-
-let i18nData = {};
 
 
 function addTranslationKeysToElement(element, currentPath = []) {
@@ -27,66 +27,59 @@ function addTranslationKeysToElement(element, currentPath = []) {
         return;
     }
 
-    if (element.nodeType === Node.ELEMENT_NODE) {
-        const newPath = (element.nodeName.toLowerCase() === 'html' || element.nodeName.toLowerCase() === 'body')
+    if (element.nodeType !== Node.ELEMENT_NODE) {
+        return;
+    }
+    
+    const newPath = (element.nodeName.toLowerCase() === 'html' || element.nodeName.toLowerCase() === 'body')
             ? currentPath
-            : currentPath.concat([element.nodeName.toLowerCase()]).slice(-noi18nConfig.maxPathTags);
+            : [...currentPath, element.nodeName.toLowerCase()].slice(-noi18nConfig.maxPathTags);
 
         const textContent = Array.from(element.childNodes)
             .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim())
             .map(n => n.nodeValue.trim())
             .join(' ').trim();
 
-        if (textContent &&
-            !isPureSpace(textContent) &&
-            !(noi18nConfig.allowPureAscii === false && isPureAscii(textContent)) &&
-            !(noi18nConfig.allowPureNumbers === false && isPureNumbers(textContent)) &&
-            !element.getAttribute('data-i18n')
-        ) {
+        if (isValidText(textContent) && !element.getAttribute('data-i18n')) {
             const namespace = newPath.join('_');
             const key = CryptoJS.MD5(textContent).toString();
 
-            if (!i18nData[namespace]) {
-                i18nData[namespace] = {};
-            }
-            i18nData[namespace][key] = textContent;
-
+            i18nData[namespace] = { ...i18nData[namespace], [key]: textContent };
             element.setAttribute('data-i18n', `${namespace}:${key}`);
         }
 
-        for (let child of element.childNodes) {
-            addTranslationKeysToElement(child, newPath);
-        }
-    }
-
+        element.childNodes.forEach(child => addTranslationKeysToElement(child, newPath));
 
 }
+
+function addTitleToI18nData() {
+    const title = document.querySelector('title');
+    if (title && isValidText(title.textContent.trim())) {
+        const key = CryptoJS.MD5(title.textContent.trim()).toString();
+        i18nData['title'] = { [key]: title.textContent.trim() };
+        title.setAttribute('data-i18n', `title:${key}`);
+    }
+}
+
 function applyTranslations() {
-    const elements = document.querySelectorAll('[data-i18n]');
+    const elements = [...document.querySelectorAll('[data-i18n]')];
     elements.forEach(el => {
         const key = el.getAttribute('data-i18n');
         const translation = i18next.t(key, { returnNull: true });
-        if (key.indexOf(translation) == -1) { // Only replace if a translation was found
-            el.textContent = translation;
-        }
+        if (!key.includes(translation)) el.textContent = translation;
     });
 }
-function addTitleToI18nData() {
-    const title = document.querySelector('title');
-    if (title) {
-        const titleText = title.textContent.trim();
-        if (titleText &&
-            !isPureSpace(titleText) &&
-            !(noi18nConfig.allowPureAscii === false && isPureAscii(titleText)) &&
-            !(noi18nConfig.allowPureNumbers === false && isPureNumbers(titleText))
-        ) {
-            const key = CryptoJS.MD5(titleText).toString();
-            i18nData['title'] = {
-                [key]: titleText
-            };
-            title.setAttribute('data-i18n', `title:${key}`);
-        }
-    }
+
+async function postTranslation(data) {
+    const pathName = window.translationNamespace;
+    await fetch(noi18nConfig.workerUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Pathname': pathName
+        },
+        body: JSON.stringify(data)
+    });
 }
 
 
@@ -104,31 +97,28 @@ async function postTranslation(data) {
 
 }
 
-(async () => {
+(async function runTranslation() {
     try {
-        while (!window.translationLoaded) {
-            await new Promise(r => setTimeout(r, 100));
-        }
-        const nsTranslationData = window.nsTranslationData || {};
-        const allTranslationData = window.allTranslationData || {};
+        while (!window.translationLoaded) await new Promise(r => setTimeout(r, 100));
+
+        const { nsTranslationData = {}, allTranslationData = {} } = window;
         addTitleToI18nData();
         addTranslationKeysToElement(document.body);
+
         i18next.init({
             lng: 'en',
             debug: true,
-            // defaultNS: 'ns',
             fallbackNS: 'translation',
-            returnNull: false, // Set this to false
-            returnEmptyString: false, // Set this to false
+            returnNull: false,
+            returnEmptyString: false,
             resources: {
                 en: {
                     translation: allTranslationData,
                     ...nsTranslationData
-
                 }
             }
         });
-        
+
         applyTranslations();
         postTranslation(i18nData);
     } catch (err) {
