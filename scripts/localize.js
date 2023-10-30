@@ -23,6 +23,10 @@ let i18nData = {};
 
 
 function addTranslationKeysToElement(element, currentPath = []) {
+    if (element.nodeName.toLowerCase() === 'script') {
+        return;
+    }
+    
     if (element.nodeType === Node.ELEMENT_NODE) {
         const newPath = (element.nodeName.toLowerCase() === 'html' || element.nodeName.toLowerCase() === 'body')
             ? currentPath
