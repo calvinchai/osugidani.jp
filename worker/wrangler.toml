@@ -8,9 +8,9 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 ORIGIN_BASE_URL = 'https://osugidani.jp/'
 WEBLATE_URL = 'https://weblate.ndxk.cc/'
-GH_PAGE_URL = 'https://calvinchai.github.io/translation-osugidani/'
+GH_PAGE_URL = 'https://calvinchai.github.io/osugidani.jp/'
 REPO_OWNER = 'calvinchai'
-REPO_NAME = 'translation-osugidani'
+REPO_NAME = 'osugidani.jp'
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
