@@ -1,6 +1,9 @@
 {
     "header_nav_ul_li_a": {
-        "651754fad896a05692dd7ab41cc50fed": "About Us"
+        "651754fad896a05692dd7ab41cc50fed": "About Us",
+        "05de82c89213b0bfaab7bc796043d89e": "General Experience Program",
+        "8c25073269aae03cb5f7c82748809756": "For Schools and Groups",
+        "986da1862ae1104d93f4e5f557962015": "For Companies and Governments"
     },
     "div_ul_li_a_span": {
         "651754fad896a05692dd7ab41cc50fed": "About Us"
@@ -9,6 +12,8 @@
         "651754fad896a05692dd7ab41cc50fed": "About Us"
     },
     "div_nav_ul_li_a": {
-        "651754fad896a05692dd7ab41cc50fed": "About Us"
+        "651754fad896a05692dd7ab41cc50fed": "About Us",
+        "8c25073269aae03cb5f7c82748809756": "For Schools and Groups",
+        "986da1862ae1104d93f4e5f557962015": "For Companies and Governments"
     }
 }
