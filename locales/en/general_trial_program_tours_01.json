@@ -11,7 +11,9 @@
         "651754fad896a05692dd7ab41cc50fed": "About Us",
         "8c25073269aae03cb5f7c82748809756": "For Schools and Groups",
         "986da1862ae1104d93f4e5f557962015": "For Companies and Governments",
-        "ef20baaff5be648e3b9df4bcbf745b5f": "Supporting Member and Donation Opportunities"
+        "ef20baaff5be648e3b9df4bcbf745b5f": "Supporting Member and Donation Opportunities",
+        "64cfcdc074bf4e21d40e6cbdd24c2f73": "Recruitment of staff/volunteers",
+        "05de82c89213b0bfaab7bc796043d89e": "General Experience Program"
     },
     "footer_div_div_a_p": {
         "651754fad896a05692dd7ab41cc50fed": "About Us"
@@ -25,9 +27,33 @@
         "f358a0b35fadd653d0dcf0beaccc5579": "Specified Commercial Transactions Act",
         "7ba222cf2c8aaf62b622fc296f067d31": "Intern (OJT)",
         "a554c278d02184118bba7d8ae76d5fcf": "Family Camping",
-        "f96b24d7f2243d25cd26288981719af8": "Protecting rural life in Osugitani"
+        "f96b24d7f2243d25cd26288981719af8": "Protecting rural life in Osugitani",
+        "133c91d377411ef66395b96533483ef2": "Ōdaimori Kindergarten",
+        "51ab2560e6376e31461a337e4ee66991": "Exciting Miyagawa Day Camp"
     },
     "div_div_p_strong_span": {
         "238cbe442a7f0d1ca78b2e548181ce1a": "This event has ended."
+    },
+    "div_div_ul_li_span": {
+        "bebb1cd2a40cf19a775cdfb4a910fa25": "Oosugi “Kids Club”"
+    },
+    "div_div_article_div_span": {
+        "d30bca6f39b781c1807fc898e9f708a8": "Project commission by the Odaicho Board of Education"
+    },
+    "div_div_article_div_h2": {
+        "bebb1cd2a40cf19a775cdfb4a910fa25": "Oosugi “Kids Club”"
+    },
+    "div_div_div_p_a": {
+        "2a8d0c21d8861d38bae3fefffe45d271": "Try your hand at dyeing with plants♪ Click here to apply"
+    },
+    "div_div_div_div_p": {
+        "be31ee7dfd47b7f87cbf20c6889ebcb0": "In Odai-cho, the Miya River runs through the center of the town, its waters nurtured by the vast forest. Let's get familiar with the nature of Odai-cho through playing in nature, and reflect on our own connection to the river and the forest!",
+        "00ed3bd4ad39c3df816f79dea8cc9ff1": "This program encourages participants from both in and outside of Odai-cho to interact with each other and experience the charms of Odai-cho."
+    },
+    "div_table_tbody_tr_td": {
+        "e5ac7e6e8c921cc282ae23fa5552ca8d": "10:30-15:00"
+    },
+    "div_div_div_div_h3": {
+        "b7e28f6334399aa8b970815b6098f458": "2023/10/14 (Sat) 　Try your hand at dyeing with plants and trees♪"
     }
 }
